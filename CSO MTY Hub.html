@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<!-- saved from url=(0117)file:///C:/Users/Administrator/Documents/Codex/2026-06-03/necesito-un-hub-que-permita-acceso/outputs/cso-mty-hub.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSO MTY Hub</title>
+  <meta name="description" content="Hub de accesos directos para CSO MTY">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #2f3137;
+      --muted: #858585;
+      --soft: #a3a3a3;
+      --line: #dedede;
+      --line-strong: #cfcfcf;
+      --shadow: 0 2px 8px rgba(17, 24, 39, .05);
+      --radius: 8px;
+      --work: #f7d9d3;
+      --work-text: #a74325;
+      --tools: #d8f0e7;
+      --tools-text: #257a5c;
+      --finance: #dbeafe;
+      --finance-text: #2563a8;
+      --social: #f8d7e6;
+      --social-text: #b43f72;
+      --personal: #e7ddff;
+      --personal-text: #5d49b8;
+      --other: #eceae6;
+      --other-text: #65615b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 18px 0 40px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .brandline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #27272a;
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.32rem;
+      line-height: 1.15;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn, .icon-btn, .tab {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      min-height: 36px;
+      transition: border-color .14s ease, background .14s ease, box-shadow .14s ease;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 11px;
+      font-weight: 650;
+      font-size: .88rem;
+      white-space: nowrap;
+    }
+
+    .btn:hover, .icon-btn:hover {
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .btn.primary {
+      background: #292929;
+      border-color: #292929;
+      color: #fff;
+    }
+
+    .btn.danger {
+      color: #9f1239;
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      color: #626262;
+      flex: 0 0 auto;
+    }
+
+    .icon {
+      width: 17px;
+      height: 17px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) 170px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .search {
+      position: relative;
+      min-width: 0;
+    }
+
+    .search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--soft);
+      pointer-events: none;
+    }
+
+    .search input, select, dialog input {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      padding: 8px 11px;
+      font-size: .9rem;
+    }
+
+    .search input {
+      padding-left: 38px;
+    }
+
+    .search input:focus, select:focus, dialog input:focus {
+      border-color: #a8a8a8;
+      box-shadow: 0 0 0 3px rgba(0,0,0,.04);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 17px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      min-height: 39px;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      border-radius: 0;
+      background: transparent;
+      color: #626262;
+      padding: 0 0 9px;
+      font-size: .9rem;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: #202020;
+      border-bottom-color: #202020;
+      font-weight: 650;
+    }
+
+    .section {
+      margin: 0 0 17px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      color: #9b9b9b;
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(208px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 11px;
+      min-height: 128px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 13px;
+      box-shadow: 0 1px 2px rgba(17, 24, 39, .03);
+      transition: border-color .14s ease, box-shadow .14s ease, transform .14s ease;
+    }
+
+    .card:hover {
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .tile {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: var(--cat-text);
+      background: var(--cat-bg);
+      flex: 0 0 auto;
+    }
+
+    .shortcut {
+      min-height: 18px;
+      max-width: 78px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 2px 7px;
+      color: var(--cat-text);
+      background: var(--cat-bg);
+      font-size: .68rem;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: .92rem;
+      line-height: 1.25;
+      font-weight: 730;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .domain {
+      margin-top: 4px;
+      color: #999;
+      font-size: .78rem;
+      overflow-wrap: anywhere;
+    }
+
+    .desc {
+      margin: 6px 0 0;
+      color: #747474;
+      font-size: .8rem;
+      line-height: 1.35;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      opacity: .86;
+    }
+
+    .open-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #525252;
+      font-size: .8rem;
+      font-weight: 700;
+    }
+
+    .open-link:hover {
+      color: #202020;
+    }
+
+    .mini-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .mini-actions .icon-btn {
+      width: 28px;
+      height: 28px;
+      border-color: transparent;
+      background: transparent;
+    }
+
+    .mini-actions .icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    .star.active {
+      color: var(--cat-text);
+      background: var(--cat-bg);
+      border-color: transparent;
+    }
+
+    .empty {
+      display: none;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .empty.show { display: block; }
+
+    dialog {
+      width: min(540px, calc(100% - 28px));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0;
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 18px 46px rgba(17, 24, 39, .16);
+    }
+
+    dialog::backdrop {
+      background: rgba(39, 39, 42, .30);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 17px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    form {
+      padding: 17px;
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #6f6f6f;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    input[type="color"] {
+      height: 38px;
+      padding: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .checkline {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text);
+      font-size: .88rem;
+      align-self: end;
+    }
+
+    .checkline input {
+      width: 17px;
+      min-height: 17px;
+      accent-color: #292929;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .right-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-note {
+      margin: 20px 0 0;
+      color: #919191;
+      font-size: .78rem;
+      text-align: center;
+    }
+
+    .sync-status {
+      min-height: 20px;
+      color: #777;
+      font-size: .8rem;
+    }
+
+    .sync-status.ok { color: #257a5c; }
+    .sync-status.error { color: #9f1239; }
+
+    .help-text {
+      margin: 0;
+      color: #777;
+      font-size: .8rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 760px) {
+      .app { width: min(100% - 24px, 1120px); }
+      .header, .toolbar { grid-template-columns: 1fr; }
+      .header { align-items: start; }
+      .header-actions { justify-content: stretch; }
+      .header-actions .btn { flex: 1; }
+      .tabs { gap: 17px; }
+    }
+
+    @media (max-width: 500px) {
+      .app { width: min(100% - 18px, 1120px); padding-top: 12px; }
+      .brandline { align-items: flex-start; }
+      .grid, .form-grid { grid-template-columns: 1fr; }
+      .modal-actions { flex-direction: column-reverse; }
+      .right-actions { flex-direction: column-reverse; }
+      .modal-actions .btn, .right-actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="brandline">
+        <div class="brand-mark" aria-hidden="true">CSO</div>
+        <div>
+          <h1>CSO MTY Hub</h1>
+          <p class="subtitle">Accesos directos para trabajo, herramientas y comunicación.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn ghost" id="githubBtn" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1.3-3.5c4.3-.5 8.8-2.1 8.8-9.5a7.4 7.4 0 0 0-2-5.1 6.9 6.9 0 0 0-.1-5.1s-1.6-.5-5.2 2a18 18 0 0 0-9.4 0c-3.6-2.5-5.2-2-5.2-2a6.9 6.9 0 0 0-.1 5.1 7.4 7.4 0 0 0-2 5.1c0 7.4 4.5 9 8.8 9.5A4.8 4.8 0 0 0 6 18v4"></path><path d="M6 19c-2 .6-3.5 0-5-2"></path></svg>
+          GitHub
+        </button>
+        <button class="btn ghost" id="resetBtn" type="button">Restaurar</button>
+        <button class="btn primary" id="addBtn" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          Agregar
+        </button>
+      </div>
+    </header>
+
+    <section class="toolbar" aria-label="Herramientas">
+      <div class="search">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input id="search" placeholder="Buscar acceso..." autocomplete="off">
+      </div>
+      <select id="sort" aria-label="Ordenar accesos">
+        <option value="custom">Orden natural</option>
+        <option value="favorite">Favoritos primero</option>
+        <option value="name">Nombre A-Z</option>
+        <option value="recent">Agregados recientes</option>
+      </select>
+    </section>
+
+    <nav class="tabs" id="tabs" aria-label="Categorías">
+        <button class="tab active" data-cat="todos">Todos</button>
+      
+        <button class="tab " data-cat="trabajo">Trabajo</button>
+      
+        <button class="tab " data-cat="herramientas">Herramientas</button>
+      
+        <button class="tab " data-cat="social">Social</button>
+      </nav>
+    <section id="content">
+          <section class="section">
+            <h2 class="section-title">Trabajo</h2>
+            
+        <div class="grid">
+          
+              <article class="card" style="--cat-bg:var(--work); --cat-text:var(--work-text)">
+                <div class="card-top">
+                  <div class="tile"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1"></path><path d="M5 6h14v14H5z"></path><path d="M9 12h6"></path></svg></div>
+                  <span class="shortcut">Alt+G</span>
+                </div>
+                <a href="https://transplace.sharepoint.com/" target="_blank" rel="noopener noreferrer">
+                  <h2>MTY Mega Sheet Excel</h2>
+                  <div class="domain">transplace.sharepoint.com</div>
+                  <p class="desc">MTY Accounts - Accessorial Costs</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="https://transplace.sharepoint.com/" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg> Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star active" data-star="8f7ac178-13e8-4614-8aee-b5612599f491" type="button" aria-label="Favorito"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg></button>
+                    <button class="icon-btn" data-edit="8f7ac178-13e8-4614-8aee-b5612599f491" type="button" aria-label="Editar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+                  </div>
+                </div>
+              </article>
+            
+              <article class="card" style="--cat-bg:var(--work); --cat-text:var(--work-text)">
+                <div class="card-top">
+                  <div class="tile"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1"></path><path d="M5 6h14v14H5z"></path><path d="M9 12h6"></path></svg></div>
+                  <span class="shortcut">Alt+S</span>
+                </div>
+                <a href="https://transplace.sharepoint.com/" target="_blank" rel="noopener noreferrer">
+                  <h2>CHI Mega Sheet</h2>
+                  <div class="domain">transplace.sharepoint.com</div>
+                  <p class="desc">CHI Accounts - AH/Weeknd Shift</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="https://transplace.sharepoint.com/" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg> Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star " data-star="19e38e50-429d-490f-b2e3-d0fb2d0f34c5" type="button" aria-label="Favorito"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg></button>
+                    <button class="icon-btn" data-edit="19e38e50-429d-490f-b2e3-d0fb2d0f34c5" type="button" aria-label="Editar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+                  </div>
+                </div>
+              </article>
+            
+        </div>
+      
+          </section>
+        
+          <section class="section">
+            <h2 class="section-title">Herramientas</h2>
+            
+        <div class="grid">
+          
+              <article class="card" style="--cat-bg:var(--tools); --cat-text:var(--tools-text)">
+                <div class="card-top">
+                  <div class="tile"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-5.1 5.1a2 2 0 1 0 2.8 2.8l5.1-5.1a4 4 0 0 0 5.4-5.4l-2.9 2.9-2.1-2.1z"></path></svg></div>
+                  <span class="shortcut">Alt+N</span>
+                </div>
+                <a href="https://uberfreight.zendesk.com/" target="_blank" rel="noopener noreferrer">
+                  <h2>ZenDesk</h2>
+                  <div class="domain">uberfreight.zendesk.com</div>
+                  <p class="desc">CSO tickets / PODs</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="https://uberfreight.zendesk.com/" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg> Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star active" data-star="57356ca2-e07c-403f-89bf-739b5b2c326e" type="button" aria-label="Favorito"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg></button>
+                    <button class="icon-btn" data-edit="57356ca2-e07c-403f-89bf-739b5b2c326e" type="button" aria-label="Editar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+                  </div>
+                </div>
+              </article>
+            
+              <article class="card" style="--cat-bg:var(--tools); --cat-text:var(--tools-text)">
+                <div class="card-top">
+                  <div class="tile"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-5.1 5.1a2 2 0 1 0 2.8 2.8l5.1-5.1a4 4 0 0 0 5.4-5.4l-2.9 2.9-2.1-2.1z"></path></svg></div>
+                  <span class="shortcut">Alt+F</span>
+                </div>
+                <a href="https://apps.usw2.pure.cloud/" target="_blank" rel="noopener noreferrer">
+                  <h2>Genesys</h2>
+                  <div class="domain">apps.usw2.pure.cloud</div>
+                  <p class="desc">Inbound-Outbound Calls CSO Tool</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="https://apps.usw2.pure.cloud/" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg> Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star " data-star="baf468c2-5834-4c8b-892a-ed8195216298" type="button" aria-label="Favorito"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg></button>
+                    <button class="icon-btn" data-edit="baf468c2-5834-4c8b-892a-ed8195216298" type="button" aria-label="Editar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+                  </div>
+                </div>
+              </article>
+            
+        </div>
+      
+          </section>
+        
+          <section class="section">
+            <h2 class="section-title">Social</h2>
+            
+        <div class="grid">
+          
+              <article class="card" style="--cat-bg:var(--social); --cat-text:var(--social-text)">
+                <div class="card-top">
+                  <div class="tile"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg></div>
+                  <span class="shortcut">Alt+I</span>
+                </div>
+                <a href="https://chat.google.com/" target="_blank" rel="noopener noreferrer">
+                  <h2>Google Chat</h2>
+                  <div class="domain">chat.google.com</div>
+                  <p class="desc">Google Chat / Internal Communication</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="https://chat.google.com/" target="_blank" rel="noopener noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg> Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star active" data-star="2ee7cb7f-d9ec-43d2-a15f-77a8d5ddb1d6" type="button" aria-label="Favorito"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg></button>
+                    <button class="icon-btn" data-edit="2ee7cb7f-d9ec-43d2-a15f-77a8d5ddb1d6" type="button" aria-label="Editar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+                  </div>
+                </div>
+              </article>
+            
+        </div>
+      
+          </section>
+        </section>
+    <section class="empty" id="empty">No encontré accesos con ese filtro.</section>
+
+    <p class="footer-note">Ctrl + K enfoca el buscador. Los shortcuts tipo Alt+G abren el acceso asignado. Los cambios se guardan en este navegador.</p>
+  </main>
+
+  <dialog id="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Editar acceso</h2>
+      <button class="icon-btn" id="closeBtn" type="button" aria-label="Cerrar">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <form id="form">
+      <input type="hidden" id="id">
+      <label>Nombre *<input id="name" required="" placeholder="Ej. ZenDesk"></label>
+      <label>URL *<input id="url" required="" type="url" placeholder="https://..."></label>
+      <div class="form-grid">
+        <label>Categoría
+          <select id="cat">
+            <option value="trabajo">Trabajo</option>
+            <option value="herramientas">Herramientas</option>
+            <option value="finanzas">Finanzas</option>
+            <option value="social">Social</option>
+            <option value="personal">Personal</option>
+            <option value="otro">Otro</option>
+          </select>
+        </label>
+        <label>Shortcut<input id="key" placeholder="Alt+G" maxlength="12"></label>
+      </div>
+      <label>Cuenta / descripción<input id="desc" placeholder="Descripción corta"></label>
+      <label class="checkline"><input id="favorite" type="checkbox"> Marcar como favorito</label>
+      <div class="modal-actions">
+        <button class="btn danger" id="deleteBtn" type="button">Eliminar</button>
+        <div class="right-actions">
+          <button class="btn" id="cancelBtn" type="button">Cancelar</button>
+          <button class="btn primary" type="submit">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="githubModal">
+    <div class="modal-head">
+      <h2>Sincronizar con GitHub</h2>
+      <button class="icon-btn" id="githubCloseBtn" type="button" aria-label="Cerrar">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <form id="githubForm">
+      <p class="help-text">Usa un GitHub Gist para compartir los accesos. Crea un token con permiso de Gist, pega el Gist ID y luego usa Subir o Bajar.</p>
+      <label>Gist ID<input id="gistId" placeholder="Ej. a1b2c3d4e5f6..."></label>
+      <label>Token de GitHub<input id="githubToken" type="password" placeholder="github_pat_..."></label>
+      <label>Archivo dentro del Gist<input id="gistFile" value="cso-mty-hub-links.json"></label>
+      <div class="sync-status" id="syncStatus">Sin configurar.</div>
+      <div class="modal-actions">
+        <button class="btn danger" id="clearGithubBtn" type="button">Quitar config</button>
+        <div class="right-actions">
+          <button class="btn" id="createGistBtn" type="button">Crear Gist</button>
+          <button class="btn" id="pullGithubBtn" type="button">Bajar</button>
+          <button class="btn" id="pushGithubBtn" type="button">Subir</button>
+          <button class="btn primary" type="submit">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const STORAGE_KEY = 'cso-mty-hub-v3';
+    const OLD_KEYS = ['cso-mty-hub-v2', 'cso-mty-hub-v1'];
+    const GITHUB_CONFIG_KEY = 'cso-mty-hub-github-config-v1';
+    const DEFAULT_GIST_FILE = 'cso-mty-hub-links.json';
+
+    const categoryMeta = {
+      trabajo: {
+        label: 'Trabajo',
+        bg: 'var(--work)',
+        text: 'var(--work-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1"></path><path d="M5 6h14v14H5z"></path><path d="M9 12h6"></path></svg>'
+      },
+      herramientas: {
+        label: 'Herramientas',
+        bg: 'var(--tools)',
+        text: 'var(--tools-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-5.1 5.1a2 2 0 1 0 2.8 2.8l5.1-5.1a4 4 0 0 0 5.4-5.4l-2.9 2.9-2.1-2.1z"></path></svg>'
+      },
+      finanzas: {
+        label: 'Finanzas',
+        bg: 'var(--finance)',
+        text: 'var(--finance-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9 10.5a2.5 2.5 0 0 1 5 0c0 3-5 1.5-5 4a2.5 2.5 0 0 0 5 0"></path></svg>'
+      },
+      social: {
+        label: 'Social',
+        bg: 'var(--social)',
+        text: 'var(--social-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>'
+      },
+      personal: {
+        label: 'Personal',
+        bg: 'var(--personal)',
+        text: 'var(--personal-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg>'
+      },
+      otro: {
+        label: 'Otro',
+        bg: 'var(--other)',
+        text: 'var(--other-text)',
+        icon: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"></path></svg>'
+      }
+    };
+
+    const icons = {
+      open: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>',
+      edit: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>',
+      star: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"></path></svg>'
+    };
+
+    const seedLinks = [
+      {
+        id: crypto.randomUUID(),
+        name: 'MTY Mega Sheet Excel',
+        url: 'https://transplace.sharepoint.com',
+        cat: 'trabajo',
+        desc: 'MTY Accounts - Accessorial Costs',
+        key: 'Alt+G',
+        favorite: true,
+        createdAt: Date.now() - 5000
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'CHI Mega Sheet',
+        url: 'https://transplace.sharepoint.com',
+        cat: 'trabajo',
+        desc: 'CHI Accounts - AH/Weeknd Shift',
+        key: 'Alt+S',
+        favorite: false,
+        createdAt: Date.now() - 4000
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'ZenDesk',
+        url: 'https://uberfreight.zendesk.com',
+        cat: 'herramientas',
+        desc: 'CSO tickets / PODs',
+        key: 'Alt+N',
+        favorite: true,
+        createdAt: Date.now() - 3000
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Genesys',
+        url: 'https://apps.usw2.pure.cloud',
+        cat: 'herramientas',
+        desc: 'Inbound-Outbound Calls CSO Tool',
+        key: 'Alt+F',
+        favorite: false,
+        createdAt: Date.now() - 2000
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Google Chat',
+        url: 'https://chat.google.com',
+        cat: 'social',
+        desc: 'Google Chat / Internal Communication',
+        key: 'Alt+I',
+        favorite: true,
+        createdAt: Date.now() - 1000
+      }
+    ];
+
+    let links = loadLinks();
+    let activeCat = 'todos';
+    let query = '';
+
+    const content = document.querySelector('#content');
+    const tabs = document.querySelector('#tabs');
+    const empty = document.querySelector('#empty');
+    const search = document.querySelector('#search');
+    const sort = document.querySelector('#sort');
+    const modal = document.querySelector('#modal');
+    const form = document.querySelector('#form');
+    const modalTitle = document.querySelector('#modalTitle');
+    const deleteBtn = document.querySelector('#deleteBtn');
+    const githubModal = document.querySelector('#githubModal');
+    const githubForm = document.querySelector('#githubForm');
+    const syncStatus = document.querySelector('#syncStatus');
+
+    function normalizeLink(link) {
+      return {
+        id: link.id || crypto.randomUUID(),
+        name: link.name || '',
+        url: link.url || '',
+        cat: categoryMeta[link.cat] ? link.cat : 'otro',
+        desc: link.desc || '',
+        key: link.key || '',
+        favorite: Boolean(link.favorite),
+        createdAt: link.createdAt || Date.now()
+      };
+    }
+
+    function loadLinks() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (Array.isArray(saved) && saved.length) return saved.map(normalizeLink);
+        for (const key of OLD_KEYS) {
+          const oldSaved = JSON.parse(localStorage.getItem(key));
+          if (Array.isArray(oldSaved) && oldSaved.length) return oldSaved.map(normalizeLink);
+        }
+        return seedLinks.map(normalizeLink);
+      } catch {
+        return seedLinks.map(normalizeLink);
+      }
+    }
+
+    function saveLinks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+    }
+
+    function loadGithubConfig() {
+      try {
+        const config = JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY));
+        return {
+          gistId: config?.gistId || '',
+          token: config?.token || '',
+          file: config?.file || DEFAULT_GIST_FILE
+        };
+      } catch {
+        return { gistId: '', token: '', file: DEFAULT_GIST_FILE };
+      }
+    }
+
+    function saveGithubConfig(config) {
+      localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify(config));
+    }
+
+    function setSyncStatus(message, type = '') {
+      syncStatus.textContent = message;
+      syncStatus.className = `sync-status ${type}`.trim();
+    }
+
+    function githubConfigFromForm() {
+      return {
+        gistId: field('gistId').value.trim(),
+        token: field('githubToken').value.trim(),
+        file: field('gistFile').value.trim() || DEFAULT_GIST_FILE
+      };
+    }
+
+    function requireGithubConfig() {
+      const config = githubConfigFromForm();
+      if (!config.gistId || !config.token) {
+        setSyncStatus('Falta Gist ID o token de GitHub.', 'error');
+        throw new Error('GitHub no configurado');
+      }
+      saveGithubConfig(config);
+      return config;
+    }
+
+    function requireGithubToken() {
+      const config = githubConfigFromForm();
+      if (!config.token) {
+        setSyncStatus('Falta el token de GitHub.', 'error');
+        throw new Error('Token no configurado');
+      }
+      return config;
+    }
+
+    function openGithubModal() {
+      const config = loadGithubConfig();
+      field('gistId').value = config.gistId;
+      field('githubToken').value = config.token;
+      field('gistFile').value = config.file || DEFAULT_GIST_FILE;
+      setSyncStatus(config.gistId ? 'Configuracion cargada.' : 'Sin configurar.');
+      githubModal.showModal();
+    }
+
+    function githubHeaders(token) {
+      return {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+    }
+
+    function serializeLinks() {
+      return JSON.stringify({
+        version: 1,
+        updatedAt: new Date().toISOString(),
+        links: links.map(normalizeLink)
+      }, null, 2);
+    }
+
+    async function pushToGithub() {
+      const config = requireGithubConfig();
+      setSyncStatus('Subiendo accesos a GitHub...');
+      const response = await fetch(`https://api.github.com/gists/${encodeURIComponent(config.gistId)}`, {
+        method: 'PATCH',
+        headers: {
+          ...githubHeaders(config.token),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          files: {
+            [config.file]: {
+              content: serializeLinks()
+            }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`GitHub respondio ${response.status}`);
+      }
+      setSyncStatus('Accesos subidos a GitHub.', 'ok');
+    }
+
+    async function createGithubGist() {
+      const config = requireGithubToken();
+      setSyncStatus('Creando Gist en GitHub...');
+      const response = await fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: {
+          ...githubHeaders(config.token),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          description: 'CSO MTY Hub shared links',
+          public: false,
+          files: {
+            [config.file || DEFAULT_GIST_FILE]: {
+              content: serializeLinks()
+            }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`GitHub respondio ${response.status}`);
+      }
+
+      const gist = await response.json();
+      const nextConfig = {
+        ...config,
+        gistId: gist.id,
+        file: config.file || DEFAULT_GIST_FILE
+      };
+      field('gistId').value = gist.id;
+      field('gistFile').value = nextConfig.file;
+      saveGithubConfig(nextConfig);
+      setSyncStatus('Gist creado y configurado.', 'ok');
+    }
+
+    async function pullFromGithub() {
+      const config = requireGithubConfig();
+      setSyncStatus('Bajando accesos desde GitHub...');
+      const response = await fetch(`https://api.github.com/gists/${encodeURIComponent(config.gistId)}`, {
+        headers: githubHeaders(config.token)
+      });
+
+      if (!response.ok) {
+        throw new Error(`GitHub respondio ${response.status}`);
+      }
+
+      const gist = await response.json();
+      const file = gist.files?.[config.file];
+      if (!file?.content) {
+        throw new Error(`No encontre ${config.file} en el Gist`);
+      }
+
+      const data = JSON.parse(file.content);
+      const incoming = Array.isArray(data) ? data : data.links;
+      if (!Array.isArray(incoming)) {
+        throw new Error('El archivo no contiene una lista valida de accesos');
+      }
+
+      links = incoming.map(normalizeLink);
+      saveLinks();
+      render();
+      setSyncStatus('Accesos bajados desde GitHub.', 'ok');
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[char]));
+    }
+
+    function getDomain(url) {
+      try { return new URL(url).hostname.replace(/^www\./, ''); }
+      catch { return url; }
+    }
+
+    function categoryLabel(cat) {
+      return categoryMeta[cat]?.label || cat;
+    }
+
+    function categories() {
+      const base = ['todos'];
+      const existing = Object.keys(categoryMeta).filter(cat => links.some(link => link.cat === cat));
+      return [...base, ...existing];
+    }
+
+    function matchesSearch(link) {
+      const text = `${link.name} ${link.url} ${categoryLabel(link.cat)} ${link.desc} ${link.key}`.toLowerCase();
+      return text.includes(query.toLowerCase());
+    }
+
+    function filteredLinks() {
+      return links.filter(link => {
+        const categoryMatch = activeCat === 'todos' || link.cat === activeCat;
+        return categoryMatch && matchesSearch(link);
+      });
+    }
+
+    function sorted(items) {
+      const list = [...items];
+      const mode = sort.value;
+      return list.sort((a, b) => {
+        if (mode === 'favorite') return Number(b.favorite) - Number(a.favorite) || a.name.localeCompare(b.name);
+        if (mode === 'name') return a.name.localeCompare(b.name);
+        if (mode === 'recent') return Number(b.createdAt) - Number(a.createdAt);
+        return Number(a.createdAt) - Number(b.createdAt);
+      });
+    }
+
+    function grouped(items) {
+      const groups = {};
+      for (const link of items) {
+        if (!groups[link.cat]) groups[link.cat] = [];
+        groups[link.cat].push(link);
+      }
+      return Object.keys(categoryMeta)
+        .filter(cat => groups[cat]?.length)
+        .map(cat => ({ cat, items: sorted(groups[cat]) }));
+    }
+
+    function renderTabs() {
+      tabs.innerHTML = categories().map(cat => `
+        <button class="tab ${cat === activeCat ? 'active' : ''}" data-cat="${escapeHtml(cat)}">${escapeHtml(cat === 'todos' ? 'Todos' : categoryLabel(cat))}</button>
+      `).join('');
+    }
+
+    function renderCards(items) {
+      return `
+        <div class="grid">
+          ${items.map(link => {
+            const meta = categoryMeta[link.cat] || categoryMeta.otro;
+            return `
+              <article class="card" style="--cat-bg:${meta.bg}; --cat-text:${meta.text}">
+                <div class="card-top">
+                  <div class="tile">${meta.icon}</div>
+                  ${link.key ? `<span class="shortcut">${escapeHtml(link.key)}</span>` : ''}
+                </div>
+                <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+                  <h2>${escapeHtml(link.name)}</h2>
+                  <div class="domain">${escapeHtml(getDomain(link.url))}</div>
+                  <p class="desc">${escapeHtml(link.desc || 'Sin descripcion')}</p>
+                </a>
+                <div class="card-actions">
+                  <a class="open-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${icons.open} Abrir</a>
+                  <div class="mini-actions">
+                    <button class="icon-btn star ${link.favorite ? 'active' : ''}" data-star="${escapeHtml(link.id)}" type="button" aria-label="Favorito">${icons.star}</button>
+                    <button class="icon-btn" data-edit="${escapeHtml(link.id)}" type="button" aria-label="Editar">${icons.edit}</button>
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderContent() {
+      const visible = filteredLinks();
+      empty.classList.toggle('show', visible.length === 0);
+
+      if (!visible.length) {
+        content.innerHTML = '';
+        return;
+      }
+
+      if (activeCat === 'todos') {
+        content.innerHTML = grouped(visible).map(group => `
+          <section class="section">
+            <h2 class="section-title">${escapeHtml(categoryLabel(group.cat))}</h2>
+            ${renderCards(group.items)}
+          </section>
+        `).join('');
+        return;
+      }
+
+      content.innerHTML = `
+        <section class="section">
+          <h2 class="section-title">${escapeHtml(categoryLabel(activeCat))}</h2>
+          ${renderCards(sorted(visible))}
+        </section>
+      `;
+    }
+
+    function render() {
+      renderTabs();
+      renderContent();
+    }
+
+    function field(id) {
+      return document.querySelector(`#${id}`);
+    }
+
+    function openModal(link = null) {
+      form.reset();
+      deleteBtn.style.visibility = link ? 'visible' : 'hidden';
+      modalTitle.textContent = link ? 'Editar acceso' : 'Agregar acceso';
+      field('id').value = link?.id || '';
+      field('name').value = link?.name || '';
+      field('url').value = link?.url || '';
+      field('cat').value = link?.cat || 'trabajo';
+      field('desc').value = link?.desc || '';
+      field('key').value = link?.key || '';
+      field('favorite').checked = Boolean(link?.favorite);
+      modal.showModal();
+    }
+
+    function closeModal() {
+      modal.close();
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const id = field('id').value || crypto.randomUUID();
+      const existing = links.find(link => link.id === id);
+      const item = normalizeLink({
+        id,
+        name: field('name').value.trim(),
+        url: field('url').value.trim(),
+        cat: field('cat').value,
+        desc: field('desc').value.trim(),
+        key: field('key').value.trim(),
+        favorite: field('favorite').checked,
+        createdAt: existing?.createdAt || Date.now()
+      });
+      const index = links.findIndex(link => link.id === id);
+      if (index >= 0) links[index] = item;
+      else links.push(item);
+      saveLinks();
+      closeModal();
+      render();
+    });
+
+    deleteBtn.addEventListener('click', () => {
+      const id = field('id').value;
+      links = links.filter(link => link.id !== id);
+      saveLinks();
+      closeModal();
+      render();
+    });
+
+    document.querySelector('#addBtn').addEventListener('click', () => openModal());
+    document.querySelector('#githubBtn').addEventListener('click', openGithubModal);
+    document.querySelector('#closeBtn').addEventListener('click', closeModal);
+    document.querySelector('#cancelBtn').addEventListener('click', closeModal);
+    document.querySelector('#githubCloseBtn').addEventListener('click', () => githubModal.close());
+    document.querySelector('#clearGithubBtn').addEventListener('click', () => {
+      localStorage.removeItem(GITHUB_CONFIG_KEY);
+      field('gistId').value = '';
+      field('githubToken').value = '';
+      field('gistFile').value = DEFAULT_GIST_FILE;
+      setSyncStatus('Configuracion eliminada.');
+    });
+    document.querySelector('#pushGithubBtn').addEventListener('click', async () => {
+      try { await pushToGithub(); }
+      catch (error) { setSyncStatus(error.message || 'No se pudo subir a GitHub.', 'error'); }
+    });
+    document.querySelector('#createGistBtn').addEventListener('click', async () => {
+      try { await createGithubGist(); }
+      catch (error) { setSyncStatus(error.message || 'No se pudo crear el Gist.', 'error'); }
+    });
+    document.querySelector('#pullGithubBtn').addEventListener('click', async () => {
+      try { await pullFromGithub(); }
+      catch (error) { setSyncStatus(error.message || 'No se pudo bajar desde GitHub.', 'error'); }
+    });
+    githubForm.addEventListener('submit', event => {
+      event.preventDefault();
+      saveGithubConfig(githubConfigFromForm());
+      setSyncStatus('Configuracion guardada.', 'ok');
+    });
+    document.querySelector('#resetBtn').addEventListener('click', () => {
+      links = seedLinks.map(link => normalizeLink({ ...link, id: crypto.randomUUID(), createdAt: Date.now() }));
+      activeCat = 'todos';
+      query = '';
+      search.value = '';
+      sort.value = 'custom';
+      saveLinks();
+      render();
+    });
+
+    search.addEventListener('input', event => {
+      query = event.target.value;
+      renderContent();
+    });
+
+    sort.addEventListener('change', renderContent);
+
+    tabs.addEventListener('click', event => {
+      const btn = event.target.closest('[data-cat]');
+      if (!btn) return;
+      activeCat = btn.dataset.cat;
+      render();
+    });
+
+    content.addEventListener('click', event => {
+      const editBtn = event.target.closest('[data-edit]');
+      const starBtn = event.target.closest('[data-star]');
+      if (editBtn) {
+        const link = links.find(item => item.id === editBtn.dataset.edit);
+        if (link) openModal(link);
+      }
+      if (starBtn) {
+        const link = links.find(item => item.id === starBtn.dataset.star);
+        if (link) {
+          link.favorite = !link.favorite;
+          saveLinks();
+          render();
+        }
+      }
+    });
+
+    window.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        search.focus();
+      }
+
+      if (event.altKey && !event.ctrlKey && !event.metaKey) {
+        const pressed = event.key.toLowerCase();
+        const found = links.find(link => String(link.key || '').toLowerCase() === `alt+${pressed}`);
+        if (found) {
+          event.preventDefault();
+          window.open(found.url, '_blank', 'noopener,noreferrer');
+        }
+      }
+    });
+
+    render();
+  </script>
+
+
+</body></html>
