@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "1",
+    "name": "Gmail Trabajo",
+    "url": "https://mail.google.com",
+    "cat": "trabajo",
+    "desc": "Cuenta empresarial principal",
+    "key": "Alt+G",
+    "color": "#f97316"
+  }
+]
