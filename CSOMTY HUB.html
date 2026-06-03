@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)file:///C:/Users/Administrator/Downloads/process-hub.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process HUB</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f6f5f0;
+    --bg3: #f0eeea;
+    --text: #1a1a18;
+    --text2: #6b6a65;
+    --text3: #9e9d99;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  .hub { padding: 16px; max-width: 900px; margin: 0 auto; }
+
+  /* Topbar */
+  .topbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+  .search-wrap { flex: 1; position: relative; }
+  .search-wrap input {
+    width: 100%; padding: 8px 12px 8px 34px;
+    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    font-size: 13px; background: var(--bg2); outline: none; color: var(--text);
+  }
+  .search-wrap input:focus { border-color: #185FA5; background: var(--bg); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+  .add-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 8px 14px; font-size: 13px; font-weight: 500;
+    background: var(--text); color: var(--bg);
+    border: none; border-radius: var(--radius-sm); cursor: pointer;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .add-btn:hover { opacity: 0.85; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 14px; overflow-x: auto; }
+  .tab {
+    padding: 7px 14px; font-size: 13px; cursor: pointer;
+    color: var(--text2); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; white-space: nowrap; transition: color 0.12s;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 10px; }
+  .section-label {
+    font-size: 10px; font-weight: 600; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.07em;
+    margin: 14px 0 8px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 13px;
+    cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+    position: relative; text-decoration: none; display: block;
+  }
+  .card:hover { border-color: var(--border2); box-shadow: 0 2px 8px rgba(0,0,0,0.07); transform: translateY(-1px); }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .card-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; line-height: 1.3; }
+  .card-url { font-size: 11px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+  .card-desc { font-size: 11px; color: var(--text2); }
+  .card-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 3px; }
+  .card:hover .card-actions { display: flex; }
+  .icon-btn {
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; cursor: pointer; color: var(--text2); font-size: 13px;
+    background: var(--bg2); border: none; transition: background 0.1s;
+  }
+  .icon-btn:hover { background: var(--bg3); }
+
+  /* Empty */
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text2); }
+  .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.40); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg); border-radius: var(--radius);
+    border: 0.5px solid var(--border2); padding: 20px;
+    width: 400px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .modal-header h3 { font-size: 15px; font-weight: 600; }
+  .close-btn { background: none; border: none; cursor: pointer; color: var(--text2); font-size: 18px; line-height: 1; padding: 2px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .field input, .field select {
+    width: 100%; padding: 8px 10px;
+    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text); background: var(--bg);
+    outline: none; font-family: inherit;
+  }
+  .field input:focus, .field select:focus { border-color: #185FA5; }
+  .color-row { display: flex; gap: 7px; flex-wrap: wrap; }
+  .color-dot {
+    width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.1s, border-color 0.1s;
+  }
+  .color-dot:hover { transform: scale(1.1); }
+  .color-dot.sel { border-color: #1a1a18; transform: scale(1.1); }
+  .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+  .btn { padding: 7px 16px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-family: inherit; }
+  .btn:hover { background: var(--bg3); }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.85; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 16px; right: 16px;
+    background: var(--text); color: var(--bg); font-size: 13px;
+    padding: 9px 15px; border-radius: var(--radius-sm);
+    z-index: 2000; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; font-family: inherit;
+  }
+  .toast.show { opacity: 1; }
+
+  /* Kbd hint */
+  .kbd-hint { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; padding-top: 14px; border-top: 0.5px solid var(--border); }
+  .kbd-hint span { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text3); }
+  .key { display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; padding: 1px 5px; border: 0.5px solid var(--border2); border-radius: 4px; color: var(--text2); font-family: 'Courier New', monospace; min-width: 22px; background: var(--bg2); }
+
+  @media (max-width: 480px) {
+    .hub { padding: 10px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="hub">
+  <div class="topbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+      <input type="text" id="searchInput" placeholder="Buscar enlace, cuenta o proceso..." oninput="render()">
+    </div>
+    <button class="add-btn" onclick="openModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      Agregar
+    </button>
+  </div>
+
+  <div class="tabs" id="tabs"><button class="tab active" onclick="activeTab=&#39;Todos&#39;;render()">Todos</button><button class="tab " onclick="activeTab=&#39;Trabajo&#39;;render()">Trabajo</button><button class="tab " onclick="activeTab=&#39;Herramientas&#39;;render()">Herramientas</button><button class="tab " onclick="activeTab=&#39;Social&#39;;render()">Social</button></div>
+  <div id="content"><div class="section-label">Trabajo</div><div class="grid">
+  <div class="card" onclick="goTo(&#39;https://transplace.sharepoint.com/:x:/r/teams/All-Staff_CarrierSupportOps/Shared%20Documents/Monterrey/MTY%20Mega%20Sheet%20Excel.xlsx?d=wdd201b0e6a9c43f1be0c57a829634c78&amp;csf=1&amp;web=1&amp;e=9tyBpg&#39;)" data-id="1">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DDF0C8;color:#2D5E0A"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></div>
+      <span class="badge" style="background:#DDF0C8;color:#2D5E0A">Alt+G</span>
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(1)" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(1)" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+      </button>
+    </div>
+    <div class="card-title">MTY Mega Sheet Excel</div>
+    <div class="card-url">transplace.sharepoint.com</div>
+    <div class="card-desc">MTY Accounts - Accessorial Costs</div>
+  </div>
+  <div class="card" onclick="goTo(&#39;https://transplace.sharepoint.com/:x:/r/sites/CSO/Shared%20Documents/Mega%20Sheets/CHI%20Mega%20Sheet.xlsx?d=w37b5fa4b825145d4b07426957bc3e7c4&amp;csf=1&amp;web=1&amp;e=Bf0QTp&#39;)" data-id="3">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DDF0C8;color:#2D5E0A"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></div>
+      <span class="badge" style="background:#DDF0C8;color:#2D5E0A">Alt+S</span>
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(3)" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(3)" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+      </button>
+    </div>
+    <div class="card-title">CHI Mega Sheet</div>
+    <div class="card-url">transplace.sharepoint.com</div>
+    <div class="card-desc">CHI Accounts - AH/Weeknd Shift</div>
+  </div></div><div class="section-label">Herramientas</div><div class="grid">
+  <div class="card" onclick="goTo(&#39;https://uberfreight.zendesk.com/agent/home/tickets&#39;)" data-id="2">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FAD8E5;color:#8C2049"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+      <span class="badge" style="background:#FAD8E5;color:#8C2049">Alt+N</span>
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(2)" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(2)" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+      </button>
+    </div>
+    <div class="card-title">ZenDesk</div>
+    <div class="card-url">uberfreight.zendesk.com</div>
+    <div class="card-desc">CSO tickets / PODs</div>
+  </div>
+  <div class="card" onclick="goTo(&#39;https://apps.usw2.pure.cloud/directory/#/person-v2/af8612c8-be8a-4037-b631-efcab7f79d35&#39;)" data-id="4">
+    <div class="card-header">
+      <div class="card-icon" style="background:#FAD8E5;color:#8C2049"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+      <span class="badge" style="background:#FAD8E5;color:#8C2049">Alt+F</span>
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(4)" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(4)" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+      </button>
+    </div>
+    <div class="card-title">Genesys</div>
+    <div class="card-url">apps.usw2.pure.cloud</div>
+    <div class="card-desc">Inbound-Outbound Calls CSO Tool</div>
+  </div></div><div class="section-label">Social</div><div class="grid">
+  <div class="card" onclick="goTo(&#39;https://chat.google.com/app/home&#39;)" data-id="6">
+    <div class="card-header">
+      <div class="card-icon" style="background:#DCEEFB;color:#1A5EA8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+      <span class="badge" style="background:#DCEEFB;color:#1A5EA8">Alt+I</span>
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(6)" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(6)" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+      </button>
+    </div>
+    <div class="card-title">Google Chat</div>
+    <div class="card-url">chat.google.com</div>
+    <div class="card-desc">Google Chat / Internal Communication</div>
+  </div></div></div>
+
+  <div class="kbd-hint">
+    <span><span class="key">Ctrl</span><span class="key">K</span> buscar</span>
+    <span><span class="key">N</span> nuevo enlace</span>
+    <span><span class="key">Alt</span><span class="key">letra</span> abrir acceso rápido</span>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Editar acceso</h3>
+      <button class="close-btn" onclick="closeModal()">×</button>
+    </div>
+    <div class="field"><label>Nombre *</label><input type="text" id="fName" placeholder="Ej: Gmail Trabajo"></div>
+    <div class="field"><label>URL *</label><input type="text" id="fUrl" placeholder="https://..."></div>
+    <div class="field">
+      <label>Categoría</label>
+      <select id="fCat">
+        <option>Trabajo</option><option>Finanzas</option><option>Social</option>
+        <option>Herramientas</option><option>Personal</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="field"><label>Cuenta / descripción</label><input type="text" id="fDesc" placeholder="Ej: cuenta empresa, cliente X..."></div>
+    <div class="field"><label>Shortcut (Alt + tecla)</label><input type="text" id="fKey" placeholder="Ej: G, 1, F..." maxlength="2" style="width:70px"></div>
+    <div class="field">
+      <label>Color</label>
+      <div class="color-row" id="colorRow"><div class="color-dot " style="background:#DCEEFB;border-color:transparent" onclick="selColor=&#39;blue&#39;;renderColors()" title="blue"></div><div class="color-dot " style="background:#D4F0E5;border-color:transparent" onclick="selColor=&#39;teal&#39;;renderColors()" title="teal"></div><div class="color-dot " style="background:#E8E5FC;border-color:transparent" onclick="selColor=&#39;purple&#39;;renderColors()" title="purple"></div><div class="color-dot " style="background:#FAE0D8;border-color:transparent" onclick="selColor=&#39;coral&#39;;renderColors()" title="coral"></div><div class="color-dot " style="background:#FDE9C0;border-color:transparent" onclick="selColor=&#39;amber&#39;;renderColors()" title="amber"></div><div class="color-dot " style="background:#FAD8E5;border-color:transparent" onclick="selColor=&#39;pink&#39;;renderColors()" title="pink"></div><div class="color-dot sel" style="background:#DDF0C8;border-color:#3B6D11" onclick="selColor=&#39;green&#39;;renderColors()" title="green"></div><div class="color-dot " style="background:#ECEAE3;border-color:transparent" onclick="selColor=&#39;gray&#39;;renderColors()" title="gray"></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Eliminado</div>
+
+<script>
+const COLORS = [
+  {name:'blue',   bg:'#DCEEFB', icon:'#1A5EA8', border:'#185FA5'},
+  {name:'teal',   bg:'#D4F0E5', icon:'#0A6648', border:'#0F6E56'},
+  {name:'purple', bg:'#E8E5FC', icon:'#4A3AAF', border:'#534AB7'},
+  {name:'coral',  bg:'#FAE0D8', icon:'#8C3015', border:'#993C1D'},
+  {name:'amber',  bg:'#FDE9C0', icon:'#7A4508', border:'#854F0B'},
+  {name:'pink',   bg:'#FAD8E5', icon:'#8C2049', border:'#993556'},
+  {name:'green',  bg:'#DDF0C8', icon:'#2D5E0A', border:'#3B6D11'},
+  {name:'gray',   bg:'#ECEAE3', icon:'#4A4845', border:'#5F5E5A'},
+];
+
+const CAT_ICONS = {
+  Trabajo: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>`,
+  Finanzas: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M9 12h6"/><path d="M9 9h1.5a1.5 1.5 0 0 1 0 3H9m0 0h1.5a1.5 1.5 0 0 1 0 3H9"/></svg>`,
+  Social: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  Herramientas: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+  Personal: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  Otro: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+};
+
+const DEFAULTS = [
+  {id:1, name:'Gmail Trabajo',      url:'https://mail.google.com',       cat:'Trabajo',       desc:'cuenta empresa principal',  key:'G', color:'coral'},
+  {id:2, name:'Notion',             url:'https://notion.so',             cat:'Herramientas',  desc:'base de conocimiento',      key:'N', color:'gray'},
+  {id:3, name:'Slack',              url:'https://slack.com',             cat:'Trabajo',       desc:'equipo comunicación',       key:'S', color:'purple'},
+  {id:4, name:'Figma',              url:'https://figma.com',             cat:'Herramientas',  desc:'diseño UI/UX',              key:'F', color:'teal'},
+  {id:5, name:'Banco en línea',     url:'https://bancomer.com.mx',       cat:'Finanzas',      desc:'cuenta nómina',             key:'B', color:'blue'},
+  {id:6, name:'Instagram',          url:'https://instagram.com',         cat:'Social',        desc:'perfil personal',           key:'I', color:'pink'},
+  {id:7, name:'LinkedIn',           url:'https://linkedin.com',          cat:'Social',        desc:'perfil profesional',        key:'L', color:'blue'},
+  {id:8, name:'GitHub',             url:'https://github.com',            cat:'Herramientas',  desc:'repositorios código',       key:'H', color:'gray'},
+];
+
+function load() {
+  try { const r = localStorage.getItem('phub_v2'); return r ? JSON.parse(r) : DEFAULTS; }
+  catch { return DEFAULTS; }
+}
+function save(items) {
+  try { localStorage.setItem('phub_v2', JSON.stringify(items)); } catch {}
+}
+
+let items = load();
+let activeTab = 'Todos';
+let editId = null;
+let selColor = 'blue';
+
+function getColor(name) { return COLORS.find(c => c.name === name) || COLORS[0]; }
+function getIcon(cat) { return CAT_ICONS[cat] || CAT_ICONS['Otro']; }
+function urlShort(url) { try { return new URL(url).hostname.replace('www.',''); } catch { return url; } }
+function getCategories() { return ['Todos', ...new Set(items.map(i => i.cat))]; }
+
+function filtered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return items.filter(i => {
+    const matchTab = activeTab === 'Todos' || i.cat === activeTab;
+    const matchQ = !q || i.name.toLowerCase().includes(q) || (i.desc||'').toLowerCase().includes(q) || i.url.toLowerCase().includes(q);
+    return matchTab && matchQ;
+  });
+}
+
+function render() {
+  // Tabs
+  const cats = getCategories();
+  document.getElementById('tabs').innerHTML = cats.map(c =>
+    `<button class="tab ${c===activeTab?'active':''}" onclick="activeTab='${c}';render()">${c}</button>`
+  ).join('');
+
+  const list = filtered();
+  const content = document.getElementById('content');
+
+  if (!list.length) {
+    content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>Sin resultados para tu búsqueda</div>`;
+    return;
+  }
+
+  if (activeTab === 'Todos') {
+    const grouped = {};
+    list.forEach(i => { (grouped[i.cat] = grouped[i.cat]||[]).push(i); });
+    content.innerHTML = Object.keys(grouped).map(cat =>
+      `<div class="section-label">${cat}</div><div class="grid">${grouped[cat].map(cardHTML).join('')}</div>`
+    ).join('');
+  } else {
+    content.innerHTML = `<div class="grid">${list.map(cardHTML).join('')}</div>`;
+  }
+}
+
+function cardHTML(item) {
+  const c = getColor(item.color);
+  const icon = getIcon(item.cat);
+  return `
+  <div class="card" onclick="goTo('${item.url}')" data-id="${item.id}">
+    <div class="card-header">
+      <div class="card-icon" style="background:${c.bg};color:${c.icon}">${icon}</div>
+      ${item.key ? `<span class="badge" style="background:${c.bg};color:${c.icon}">Alt+${item.key}</span>` : ''}
+    </div>
+    <div class="card-actions">
+      <button class="icon-btn" onclick="event.stopPropagation();editItem(${item.id})" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="icon-btn" onclick="event.stopPropagation();deleteItem(${item.id})" title="Eliminar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button>
+    </div>
+    <div class="card-title">${item.name}</div>
+    <div class="card-url">${urlShort(item.url)}</div>
+    <div class="card-desc">${item.desc || ''}</div>
+  </div>`;
+}
+
+function goTo(url) {
+  if (!url.startsWith('http')) url = 'https://' + url;
+  window.open(url, '_blank');
+}
+
+function openModal(id) {
+  editId = id || null;
+  document.getElementById('modalTitle').textContent = id ? 'Editar acceso' : 'Nuevo acceso';
+  if (id) {
+    const it = items.find(i => i.id === id);
+    document.getElementById('fName').value = it.name;
+    document.getElementById('fUrl').value = it.url;
+    document.getElementById('fCat').value = it.cat;
+    document.getElementById('fDesc').value = it.desc || '';
+    document.getElementById('fKey').value = it.key || '';
+    selColor = it.color;
+  } else {
+    ['fName','fUrl','fDesc','fKey'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fCat').value = 'Trabajo';
+    selColor = 'blue';
+  }
+  renderColors();
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('fName').focus(), 60);
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function renderColors() {
+  document.getElementById('colorRow').innerHTML = COLORS.map(c =>
+    `<div class="color-dot ${c.name===selColor?'sel':''}" style="background:${c.bg};border-color:${c.name===selColor?c.border:'transparent'}" onclick="selColor='${c.name}';renderColors()" title="${c.name}"></div>`
+  ).join('');
+}
+
+function saveItem() {
+  const name = document.getElementById('fName').value.trim();
+  const url  = document.getElementById('fUrl').value.trim();
+  if (!name || !url) { showToast('Nombre y URL son requeridos'); return; }
+  const item = {
+    id:    editId || Date.now(),
+    name,  url,
+    cat:   document.getElementById('fCat').value,
+    desc:  document.getElementById('fDesc').value.trim(),
+    key:   document.getElementById('fKey').value.trim().toUpperCase(),
+    color: selColor
+  };
+  items = editId ? items.map(i => i.id === editId ? item : i) : [...items, item];
+  save(items);
+  closeModal();
+  render();
+  showToast(editId ? '✓ Acceso actualizado' : '✓ Acceso agregado');
+}
+
+function editItem(id) { openModal(id); }
+function deleteItem(id) {
+  if (!confirm('¿Eliminar este acceso?')) return;
+  items = items.filter(i => i.id !== id);
+  save(items);
+  render();
+  showToast('Eliminado');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+document.addEventListener('keydown', e => {
+  const inInput = ['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName);
+  if (!inInput) {
+    if (e.key === 'n' || e.key === 'N') { openModal(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+      return;
+    }
+  }
+  if (e.altKey && !inInput) {
+    items.forEach(i => {
+      if (i.key && e.key.toUpperCase() === i.key.toUpperCase()) goTo(i.url);
+    });
+  }
+});
+
+render();
+</script>
+
+
+</body></html>
